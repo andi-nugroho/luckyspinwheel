@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md">
+        <form action="/login" method="POST" class="bg-gray-800/50 backdrop-blur-sm shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 border border-purple-500/20">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+                    Admin Login
+                </h1>
+            </div>
+            
+            <% if (locals.error) { %>
+                <div class="mb-4 p-3 bg-red-500/20 text-red-400 rounded-lg">
+                    <%= error %>
+                </div>
+            <% } %>
+            
+            <div class="mb-4">
+                <label class="block text-purple-300 text-sm font-bold mb-2" for="username">
+                    Username
+                </label>
+                <input class="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-purple-500"
+                       id="username" name="username" type="text" required>
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-purple-300 text-sm font-bold mb-2" for="password">
+                    Password
+                </label>
+                <input class="w-full p-3 rounded bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-purple-500"
+                       id="password" name="password" type="password" required>
+            </div>
+            
+            <button class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-3 px-4 rounded hover:from-purple-700 hover:to-pink-700 transition duration-200"
+                    type="submit">
+                Sign In
+            </button>
+        </form>
+    </div>
+</body>
+</html>

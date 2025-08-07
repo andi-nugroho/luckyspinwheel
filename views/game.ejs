@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lucky Wheel</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .shine-effect {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background-size: 200% 100%;
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .spin-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 0.5rem rgba(147, 51, 234, 0.5));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 2rem rgba(236, 72, 153, 0.7));
+            }
+        }
+
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* SweetAlert Custom Styling */
+        .cyber-alert {
+            background: linear-gradient(90deg, rgba(31, 41, 55, 0.95), rgba(67, 56, 202, 0.1)) !important;
+            border: 1px solid rgba(147, 51, 234, 0.3) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+
+        .cyber-alert::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border: 2px solid transparent;
+            background: linear-gradient(90deg, #4c1d95, #db2777);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: cyber-border 4s linear infinite;
+        }
+
+        .cyber-button {
+            background: linear-gradient(90deg, #4c1d95, #db2777) !important;
+            border: none !important;
+            backdrop-filter: blur(4px) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .cyber-button:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.5) !important;
+        }
+
+        .cyber-title {
+            background: linear-gradient(90deg, #c084fc, #e879f9);
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            text-shadow: 0 0 10px rgba(147, 51, 234, 0.3) !important;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white min-h-screen flex items-center justify-center overflow-x-hidden"
+    style="background-image: url('data:image/svg+xml,%3Csvg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;28&quot; height=&quot;49&quot; viewBox=&quot;0 0 28 49&quot;%3E%3Cg fill=&quot;%239333ea&quot; fill-opacity=&quot;0.1&quot;%3E%3Cpath d=&quot;M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9z&quot;/%3E%3C/g%3E%3C/svg%3E'), linear-gradient(to bottom right, #111827, #513568, #111827); background-repeat: repeat;">
+    <!-- Background Effects -->
+    <div
+        class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-gray-900/40 to-gray-900/80">
+    </div>
+    <div id="particles-js" style="position: fixed;top: 0;left: 0;width: 100%;height: 100%;z-index: -1;pointer-events: none;"></div>
+
+    <div class="container mx-auto px-2 sm:px-4 py-4 sm:py-8 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header Section -->
+            <div class="text-center mb-6 sm:mb-12 float">
+                <h1
+                    class="text-3xl sm:text-5xl font-bold mb-2 sm:mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+                    Lucky Wheel
+                </h1>
+                <p class="text-base sm:text-lg text-purple-200 mt-2">Spin the wheel and win amazing prizes!</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 md:gap-8 items-start">
+                <!-- Left Side Info (collapsible on mobile) -->
+                <div class="md:col-span-1 space-y-4">
+                    <div class="bg-gray-800/50 backdrop-blur-sm p-3 sm:p-4 rounded-xl border border-purple-500/20">
+                        <button class="flex justify-between items-center w-full md:hidden"
+                            onclick="toggleInfo('howToPlay')">
+                            <h3 class="text-purple-300 text-lg font-semibold">How to Play</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="howToPlay" class="md:block hidden mt-2">
+                            <ol class="text-sm text-gray-300 space-y-2">
+                                <li>1. Enter your token</li>
+                                <li>2. Click spin button</li>
+                                <li>3. Wait for wheel to stop</li>
+                                <li>4. Claim your prize!</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Wheel Section -->
+                <div class="md:col-span-3 order-first md:order-none">
+                    <div class="relative">
+                        <!-- Token Input -->
+                        <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 w-full max-w-sm px-2">
+                            <div
+                                class="flex items-center bg-gray-800/50 backdrop-blur-sm rounded-full p-2 border border-purple-500/20">
+                                <input type="text" id="token" placeholder="Enter your token"
+                                    class="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder-purple-300 px-4 text-sm sm:text-base">
+                                <button id="spin-button"
+                                    class="shine-effect px-4 sm:px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-200 flex items-center text-sm sm:text-base">
+                                    <i class="fas fa-sync-alt mr-2"></i>
+                                    Spin
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="relative" id="wheel-container">
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 z-10">
+                                <i
+                                    class="fas fa-caret-down text-3xl sm:text-4xl text-red-500 filter drop-shadow-lg spin-glow mt-2"></i>
+                            </div>
+                            <canvas id="spinWheel" width="500" height="500"
+                                class="w-full max-w-[500px] mx-auto filter drop-shadow-2xl"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-1 space-y-4">
+                    <div class="bg-gray-800/50 backdrop-blur-sm p-3 sm:p-4 rounded-xl border border-purple-500/20">
+                        <button class="flex justify-between items-center w-full md:hidden"
+                            onclick="toggleInfo('prizeList')">
+                            <h3 class="text-purple-300 text-lg font-semibold">Possible Prizes</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div id="prizeList" class="md:block hidden mt-2">
+                            <div class="text-sm text-gray-300">Loading prizes...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="tickAudio" src="/audio/tick.mp3"></audio>
+    <audio id="winAudio" src="/audio/win.mp3"></audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+    <script src="/js/winwheel.js"></script>
+    <script src="/js/wheel.js"></script>
+
+    <script>
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80 },
+                color: { value: '#ffffff' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5 },
+                size: { value: 3 },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#ffffff',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 4,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' }
+                },
+                modes: {
+                    repulse: { distance: 100 },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+    </script>
+
+    <script>
+        fetch('/prizes')
+            .then(response => response.json())
+            .then(prizes => {
+                document.getElementById('prizeList').innerHTML = prizes
+                    .map(prize => `<div class="mb-1">• ${prize.name}</div>`)
+                    .join('');
+            });
+
+        function toggleInfo(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('hidden');
+        }
+    </script>
+</body>
+
+</html>
